@@ -1,0 +1,21 @@
+
+services:
+  # Nginx Service
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx_proxy
+    ports:
+      - "8080:80"
+    volumes:
+      # Mount the custom nginx configuration read-only
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: unless-stopped
+
+  # Node.js App Service
+  app:
+    build: .
+    container_name: express_app
+
+    depends_on:
+      - nginx
+    restart: unless-stopped
